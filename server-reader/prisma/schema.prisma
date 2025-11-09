@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ====================================
+//  NETWORK EVENTS (Raw Predictions)
+// ====================================
+model NetworkEvent_lr {
+  id              Int       @id @default(autoincrement())
+  stream_offset   Int
+  timestamp       DateTime  @default(now())
+  src_ip          String
+  dst_ip          String
+  protocol        String?
+  packet_count    Int
+  byte_count      Int
+  flow_duration   Float
+  label           String     // "BENIGN" atau "DDOS"
+  probability     Float
+}
+
+model NetworkEvent_rf {
+  id              Int       @id @default(autoincrement())
+  stream_offset   Int
+  timestamp       DateTime  @default(now())
+  src_ip          String
+  dst_ip          String
+  protocol        String?
+  packet_count    Int
+  byte_count      Int
+  flow_duration   Float
+  label           String
+  probability     Float
+}
+
+// ====================================
+//  ATTACK SUMMARY (Aggregated)
+// ====================================
+model AttackSummary_lr {
+  id            Int      @id @default(autoincrement())
+  stream_offset Int
+  date          DateTime
+  total_flows   Int
+  benign_count  Int
+  ddos_count    Int
+  ddos_ratio    Float
+}
+
+model AttackSummary_rf {
+  id            Int      @id @default(autoincrement())
+  stream_offset Int
+  date          DateTime
+  total_flows   Int
+  benign_count  Int
+  ddos_count    Int
+  ddos_ratio    Float
+}
+
+// ====================================
+//  SYSTEM PERFORMANCE (Model Metrics)
+// ====================================
+model SystemPerformance_lr {
+  id             Int      @id @default(autoincrement())
+  timestamp      DateTime @default(now())
+  accuracy       Float
+  precision      Float
+  recall         Float
+  f1_score       Float
+  latency_ms     Float?
+  cpu_usage      Float?
+  memory_usage   Float?
+}
+
+model SystemPerformance_rf {
+  id             Int      @id @default(autoincrement())
+  timestamp      DateTime @default(now())
+  accuracy       Float
+  precision      Float
+  recall         Float
+  f1_score       Float
+  latency_ms     Float?
+  cpu_usage      Float?
+  memory_usage   Float?
+}
