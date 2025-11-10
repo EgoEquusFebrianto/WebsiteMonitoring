@@ -264,12 +264,5 @@ def stop_stream():
 
     return jsonify({"message": f"🛑 Streaming model {model_type.upper()} dihentikan."}), 200
 
-# @app.route("/start", methods=["GET"])
-# def start_stream():
-#     """Endpoint untuk memulai proses streaming."""
-#     start_streaming_microbatch_lr()
-#     start_streaming_microbatch_rf()
-#     return "Streaming dimulai!"
-
 if __name__ == "__main__":
     app.run(port=5001, debug=True)
